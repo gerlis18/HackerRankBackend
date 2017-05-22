@@ -20,7 +20,8 @@ router.post('/register', (req, res, next) => {
         if (err) {
             res.json({
                 success: false,
-                msg: "Error al registrar usuario"
+                msg: "Error al registrar usuario",
+                error: err
             });
         } else {
             res.json({
@@ -63,7 +64,8 @@ router.post('/authenticate', (req, res, next) => {
                     }
                 });
 
-                
+                res.locals = { user: user }
+                console.log(res.locals.user._id);
             } else {
                 return res.json({
                     success: false,
@@ -75,9 +77,31 @@ router.post('/authenticate', (req, res, next) => {
 });
 
 
+//profiles
+router.route('/profile')
+.get((req, res, next) => {
+      User.find({},"name email username",function(err, docs) {
+          if (!err) {
+              res.send(docs);
+              return docs;
+          } else { console.log(err); }
+      });
+})
+.delete(function(req, res){
+    User.findOneAndRemove({_id: req.params.id}, function(err) {
+        if (!err) {
+            res.json({
+                success: true,
+                msg: "se elimino correctamente"
+            })
+        }
+    })
+});
+
+
 //profile
-router.get('/profiles', (req, res, next) => {
-      User.find({},"name username email", function(err, docs) {
+router.get('/profile/:id', (req, res, next) => {
+      User.findById(req.params.id, function(err, docs) {
           if (!err) {
               res.send(docs);
               return docs;
@@ -94,21 +118,33 @@ router.get('/validate', (req, res, next) => {
 router.route('/avatar')
     .post(function(req, res){
         var data = {
-            title: req.body.title
+            title: req.body.title,
+            creator: req.body.creator
         }
-
-        var imagen = new Imagen(data);
+        console.log(data);
+        /*var imagen = new Imagen(data);
         imagen.save(function(err){
             if (!err) {
-                res.redirect('/avatar/'+imagen._id)
+                res.json({
+                    success: true,
+                    msg: "se creo el nuevo avatar"
+                })
+                //res.redirect('/avatar/'+imagen._id)
             }
-        })
+        })*/
     });
-
 
 router.route('/avatar/:id')
     .get(function(req, res) {
         Imagen.findById(req.params.id, function(err, imagen) {
+            res.send(imagen);
+            return imagen;
+        })
+    });
+
+router.route('/avatar')
+    .get(function(req, res) {
+        Imagen.find({}, function(err, imagen) {
             res.send(imagen);
             return imagen;
         })
