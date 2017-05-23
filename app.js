@@ -6,8 +6,8 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const mongoDB = require('./config/database');
 const session = require('express-session');
-const multer = require('multer');
 const fs = require('fs');
+const formidable = require('express-formidable');
 
 mongoose.connect(mongoDB.database);
 
@@ -22,17 +22,19 @@ mongoose.connection.on('error', (err) => {
 
 const app = express();
 
-const users = require('./routes/users');
+const users = require('./controllers/users');
 
-const tests = require('./routes/tests');
+const tests = require('./controllers/tests');
 
-const usersTests = require('./routes/userTest');
+const usersTests = require('./controllers/userTest');
 
-const port = 3000;
+const port = 3200;
 
 //Cors Middleware
 app.use(cors());
 
+//formidable
+app.use(formidable());
 
 
 //Set static folder

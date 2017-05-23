@@ -1,8 +1,0 @@
-{
-        "server"  : "localhost",
-        "userName": "sa",
-        "password": "300ger1771Lis.",
-        "port":"1433",
-        "options": { "instanceName":"SQLEXPRESS","database": "dbsuggestions" }
-    
-}

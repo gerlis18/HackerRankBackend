@@ -5,9 +5,7 @@ const testModel = require('../models/tests');
 router.route('/register').post((req, res) => {
     const newTest = new testModel({
         title: req.body.title,
-        description: req.body.description,
-        example: req.body.example,
-        imageUrl: req.body.imageUrl,
+        exampleHtml: req.body.exampleHtml,
         language: req.body.language,
         sourceCodeUrl: req.body.sourceCode,
         dificulty: req.body.dificulty
@@ -24,7 +22,7 @@ router.route('/register').post((req, res) => {
 });
 
 
-router.route('/tests').get(function(req, res) {
+router.route('/').get(function(req, res) {
     test.getTests((err, test) => {
         if (!err) {
             res.send(test);
@@ -32,7 +30,7 @@ router.route('/tests').get(function(req, res) {
     })
 });
 
-router.route('/tests/:id').get(function(req, res) {
+router.route('/:id').get(function(req, res) {
     test.getTestById(req.params.id, (err, test) => {
         if (!err) {
             res.send(test);

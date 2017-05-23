@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const config = require('../config/database');
 const Imagen = require('../models/images');
+const imagenMiddleware = require('../middlewares/imageMiddleware');
 
 //Register
 router.post('/register', (req, res, next) => {
@@ -65,7 +66,7 @@ router.post('/authenticate', (req, res, next) => {
                 });
 
                 res.locals = { user: user }
-                console.log(res.locals.user._id);
+                //console.log(res.locals.user._id);
             } else {
                 return res.json({
                     success: false,
@@ -117,12 +118,12 @@ router.get('/validate', (req, res, next) => {
 //Avatar
 router.route('/avatar')
     .post(function(req, res){
-        var data = {
+        var imagen = new Imagen({
             title: req.body.title,
-            creator: req.body.creator
-        }
-        console.log(data);
-        /*var imagen = new Imagen(data);
+            creator: req.body.creator,
+            file: req.body.file
+        });
+        console.log(req.ip);
         imagen.save(function(err){
             if (!err) {
                 res.json({
@@ -130,16 +131,15 @@ router.route('/avatar')
                     msg: "se creo el nuevo avatar"
                 })
                 //res.redirect('/avatar/'+imagen._id)
+            } else {
+                res.send(err);
             }
-        })*/
+        })
     });
 
 router.route('/avatar/:id')
-    .get(function(req, res) {
-        Imagen.findById(req.params.id, function(err, imagen) {
-            res.send(imagen);
-            return imagen;
-        })
+    .get(function(req, res, next) {
+        imagenMiddleware.findImage(req, res, next);
     });
 
 router.route('/avatar')
