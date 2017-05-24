@@ -28,7 +28,7 @@ const tests = require('./controllers/tests');
 
 const usersTests = require('./controllers/userTest');
 
-const port = 3200;
+const port = process.env.PORT || 3000;
 
 //Cors Middleware
 app.use(cors());
