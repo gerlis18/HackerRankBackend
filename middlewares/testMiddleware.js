@@ -16,3 +16,11 @@ module.exports.getTestByTitle = (title, callback) => {
     const query = { title: title }
     testModel.findOne(query,callback);
 }
+
+module.exports.updateTest = (id, test, callback) => {
+    testModel.findByIdAndUpdate(id, test, { new: true }, callback);
+}
+
+module.exports.deleteTest = (id, callback) => {
+    testModel.findByIdAndRemove(id, callback);
+}

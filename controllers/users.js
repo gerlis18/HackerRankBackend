@@ -6,6 +6,8 @@ const User = require('../models/user');
 const config = require('../config/database');
 const Imagen = require('../models/images');
 const imagenMiddleware = require('../middlewares/imageMiddleware');
+const multer  = require('multer')
+const upload = multer({ dest: '../public/uploads/' })
 
 //Register
 router.post('/register', (req, res, next) => {
@@ -15,7 +17,6 @@ router.post('/register', (req, res, next) => {
         username: req.body.username,
         password: req.body.password
     });
-    console.log(`Esta es la contraseña 1: ${newUser.password}`);
 
     User.addUser(newUser, (err, user) => {
         if (err) {
@@ -117,13 +118,12 @@ router.get('/validate', (req, res, next) => {
 
 //Avatar
 router.route('/avatar')
-    .post(function(req, res){
+    .post(upload.single('avatar'),function(req, res){
         var imagen = new Imagen({
             title: req.body.title,
             creator: req.body.creator,
             file: req.body.file
         });
-        console.log(req.ip);
         imagen.save(function(err){
             if (!err) {
                 res.json({
