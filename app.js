@@ -34,7 +34,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 
 //formidable
-app.use(formidable());
+//app.use(formidable());
 
 
 //Set static folder
