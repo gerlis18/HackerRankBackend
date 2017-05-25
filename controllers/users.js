@@ -104,18 +104,14 @@ router.route('/profile')
 
 //profile
 router.get('/profile/:id', (req, res, next) => {
-      User.findById(req.params.id, function(err, docs) {
+      User.findById(req.params.id, function(err, user) {
           if (!err) {
-              res.send(docs);
-              return docs;
+              res.send(user);
+              return user;
           } else { console.log(err); }
       });
 });
 
-//validate
-router.get('/validate', (req, res, next) => {
-    res.send('validate');
-});
 
 //Avatar
 router.route('/avatar')
