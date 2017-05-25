@@ -6,8 +6,9 @@ const User = require('../models/user');
 const config = require('../config/database');
 const Imagen = require('../models/images');
 const imagenMiddleware = require('../middlewares/imageMiddleware');
-const multer  = require('multer')
-const upload = multer({ dest: '../public/uploads/' })
+const multer  = require('multer');
+const upload = multer({ dest: '../public/uploads/' });
+const defaultImage = 'http://localhost:3000/uploads/avatars/avatar-default-2.png'
 
 //Register
 router.post('/register', (req, res, next) => {
@@ -15,9 +16,9 @@ router.post('/register', (req, res, next) => {
         name: req.body.name,
         email: req.body.email,
         username: req.body.username,
-        password: req.body.password
+        password: req.body.password,
+        imageUrl: defaultImage
     });
-
     User.addUser(newUser, (err, user) => {
         if (err) {
             res.json({
@@ -82,7 +83,7 @@ router.post('/authenticate', (req, res, next) => {
 //profiles
 router.route('/profile')
 .get((req, res, next) => {
-      User.find({},"name email username",function(err, docs) {
+      User.find({},"name email username imageUrl",function(err, docs) {
           if (!err) {
               res.send(docs);
               return docs;

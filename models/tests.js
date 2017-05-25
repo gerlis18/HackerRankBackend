@@ -6,8 +6,14 @@ const config = require('../config/database');
 const testSchema = mongoose.Schema({
     title: { type: String, required: true },
     exampleHtml: { type: String, required: true },
-    language: {type: String, required: true},
-    sourceCodeUrl: {type: String, required: true},
+    language: {
+        java: {
+            sourceCodeUrl: { type: String, required:  true }
+        },
+        csharp: {
+            sourceCodeUrl: { type: String, required:  true }
+        }
+    },
     dificulty: { type: String, required: true }
 });
 

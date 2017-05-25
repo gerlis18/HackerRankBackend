@@ -6,8 +6,14 @@ router.route('/register').post((req, res) => {
     const newTest = new testModel({
         title: req.body.title,
         exampleHtml: req.body.exampleHtml,
-        language: req.body.language,
-        sourceCodeUrl: req.body.sourceCode,
+        language: {
+            java: {
+                sourceCodeUrl: req.body.language.java.sourceCodeJava
+            },
+            csharp: {
+                sourceCodeUrl: req.body.language.csharp.sourceCodeCSharp
+            }
+        },
         dificulty: req.body.dificulty
     });
 
