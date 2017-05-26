@@ -1,28 +1,26 @@
 const router = require('express').Router();
-const test = require('../middlewares/testMiddleware');
-const testModel = require('../models/tests');
+const challengeMiddleware = require('../middlewares/challengeMiddleware');
+const challengeModel = require('../models/challenge');
 
 router.route('/register').post((req, res) => {
-    const newTest = new testModel({
+    newTest = new challengeModel({
         title: req.body.title,
         exampleHtml: req.body.exampleHtml,
         language: [
             {name: req.body.language[0].name, sourceCodeUrl: req.body.language[0].sourceCode},
-            {name: req.body.language[1].name, sourceCodeUrl: req.body.language[1].sourceCode}
-        ],
+            {name: req.body.language[1].name, sourceCodeUrl: req.body.language[1].sourceCode}],
         dificulty: req.body.dificulty
     });
 
-
-    test.addTest(newTest, (err, test) => {
+    challengeMiddleware.addTest(newTest, (err, test) => {
         if (!err) {
-             res.json({
+            res.json({
                 success: true,
                 statusCode: res.statusCode,
                 msg: 'Se ha creado un nuevo Test'
             });
         } else {
-             res.status(400).json({
+            res.status(400).json({
                 success: false,
                 statusCode: res.statusCode,
                 msg: 'hubo un error al crear el Test'
@@ -34,7 +32,7 @@ router.route('/register').post((req, res) => {
 
 
 router.route('/').get(function (req, res) {
-    test.getTests((err, test) => {
+    challengeMiddleware.getTests((err, test) => {
         if (!err) {
             res.json({
                 success: true,
@@ -54,7 +52,7 @@ router.route('/').get(function (req, res) {
 
 router.route('/:id')
     .get(function (req, res) {
-        test.getTestById(req.params.id, (err, test) => {
+        challengeMiddleware.getTestById(req.params.id, (err, test) => {
             if (!err) {
                 res.json({
                     success: true,
@@ -70,7 +68,7 @@ router.route('/:id')
                 console.log(err);
             }
         })
-        
+
     })
     .put(function (req, res) {
 
@@ -81,7 +79,7 @@ router.route('/:id')
             dificulty: req.body.dificulty
         };
 
-        test.updateTest(req.params.id, updateTest, (err, newTest) => {
+        challengeMiddleware.updateTest(req.params.id, updateTest, (err, newTest) => {
             if (!err) {
                 res.json({
                     success: true,
@@ -100,7 +98,7 @@ router.route('/:id')
         })
     })
     .delete(function (req, res) {
-        test.deleteTest(req.params.id, (err) => {
+        challengeMiddleware.deleteTest(req.params.id, (err) => {
             if (!err) {
                 res.json({
                     success: true,

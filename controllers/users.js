@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const userMiddleware = require('../middlewares/userMiddleware');
 const config = require('../config/database');
 const Imagen = require('../models/images');
 const imagenMiddleware = require('../middlewares/imageMiddleware');
-const multer  = require('multer');
-const upload = multer({ dest: '../public/uploads/' });
+//const upload = multer({ dest: '../public/uploads/' });
 const defaultImage = 'http://localhost:3000/uploads/avatars/avatar-default-2.png'
 
 //Register
@@ -19,7 +18,7 @@ router.post('/register', (req, res, next) => {
         password: req.body.password,
         imageUrl: defaultImage
     });
-    User.addUser(newUser, (err, user) => {
+    userMiddleware.addUser(newUser, (err, user) => {
         if (err) {
             res.json({
                 success: false,
@@ -40,7 +39,7 @@ router.post('/authenticate', (req, res, next) => {
     const username = req.body.username;
     const password = req.body.password;
 
-    User.getUserByUsername(username, (err, user) => {
+    userMiddleware.getUserByUsername(username, (err, user) => {
         if (err) throw err;
         if (!user) {
             return res.json({
@@ -49,7 +48,7 @@ router.post('/authenticate', (req, res, next) => {
             });
         }
 
-        User.comparePassword(password, user.password, (err, isMatch) => {
+        userMiddleware.comparePassword(password, user.password, (err, isMatch) => {
             if (err) throw err;
             if (isMatch) {
                 const token = jwt.sign(user, config.secret, {
@@ -66,9 +65,6 @@ router.post('/authenticate', (req, res, next) => {
                         email: user.email
                     }
                 });
-
-                res.locals = { user: user }
-                //console.log(res.locals.user._id);
             } else {
                 return res.json({
                     success: false,
@@ -114,6 +110,7 @@ router.get('/profile/:id', (req, res, next) => {
 
 
 //Avatar
+/*
 router.route('/avatar')
     .post(upload.single('avatar'),function(req, res){
         var imagen = new Imagen({
@@ -147,4 +144,5 @@ router.route('/avatar')
         })
     });
 
-module.exports = router;
+
+*/module.exports = router;

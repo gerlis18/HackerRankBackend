@@ -6,8 +6,9 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const mongoDB = require('./config/database');
 const session = require('express-session');
-const fs = require('fs');
-
+const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
 mongoose.connect(mongoDB.database);
 
@@ -19,14 +20,13 @@ mongoose.connection.on('error', (err) => {
     console.log(`Database Error: ${err}`);
 })
 
-
-const app = express();
-
 const users = require('./controllers/users');
 
-const tests = require('./controllers/tests');
+const challenges = require('./controllers/challenges');
 
-const usersTests = require('./controllers/userTest');
+const challengesDetails = require('./controllers/challengesDetails');
+
+const socketIO = require('./helpers/socket');
 
 const port = process.env.PORT || 3000;
 
@@ -49,17 +49,11 @@ app.use(passport.session());
 
 //express-session Middleware
 app.use(session({
-    secret: 'keyboard dog', 
+    secret: 'MaratonIG', 
     resave: false, 
     saveUninitialized: false
 }));
 
-//cors
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
 
 require('./config/passport')(passport);
 
@@ -67,16 +61,18 @@ require('./config/passport')(passport);
 //routes
 app.use('/users', users);
 
-app.use('/tests', tests);
+app.use('/challenge', challenges);
 
-app.use('/userTests', usersTests);
+app.use('/userTests', challengesDetails);
 
 app.get('/', (req, res) => {
-    res.send('invalid endpoint');
+    res.status(200).send('invalid endpoint');
 });
 
+io.on('connection', function(socket) {
+    console.log(socket);
+});
 
-
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server started on port: ${port}`);
 });

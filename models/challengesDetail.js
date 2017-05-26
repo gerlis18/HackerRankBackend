@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
-const config = require('../config/database');
 
 const userTestSchema = {
-    user: { type: Object, required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     language: { type: String, required: true },
     dateTime: { type: String, required: true },
     test: { type: Object, required: true },

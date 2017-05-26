@@ -1,10 +1,10 @@
 const router = require('express').Router();
-const userTestModel = require('../models/usersTest');
-const userTestMiddleware = require('../middlewares/userTestMiddleware');
+const challengesDetail = require('../models/challengesDetail');
+const challengesDetailMiddleware = require('../middlewares/challengesDetailMiddleware');
 
 router.route('/')
 .post((req, res) => {
-    const newUserTest = new userTestModel({
+    const newUserTest = new challengesDetail({
         user: req.body.user,
         language: req.body.language,
         dateTime: new Date().toJSON(),
@@ -15,7 +15,7 @@ router.route('/')
         score: req.body.score
     });
 
-    userTestMiddleware.add(newUserTest, (err) => {
+    challengesDetailMiddleware.add(newUserTest, (err) => {
         if (!err) {
             res.json({
                 success: true,
@@ -27,7 +27,7 @@ router.route('/')
     })
 })
 .get((req, res) => {
-    userTestMiddleware.getUserTests((err, userTests) => {
+    challengesDetailMiddleware.getUserTests((err, userTests) => {
         if (!err) {
             res.send(userTests);
         } else {
@@ -38,7 +38,7 @@ router.route('/')
 
 router.route('/:id')
 .get((req, res) => {
-    userTestMiddleware.getUserTestById(req.params.id, (err, data) => {
+    challengesDetailMiddleware.getUserTestById(req.params.id, (err, data) => {
         if (!err) {
             res.send(data);
         } else {

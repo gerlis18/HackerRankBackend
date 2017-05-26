@@ -20,7 +20,8 @@
     "mongoose": "*",
     "multer": "^1.3.0",
     "passport": "*",
-    "passport-jwt": "*"
+    "passport-jwt": "*",
+    "socket.io": "^2.0.1"
   },
   "author": "galvarez@intergrupo.com",
   "license": "ISC",
