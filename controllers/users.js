@@ -10,7 +10,8 @@ const imagenMiddleware = require('../middlewares/imageMiddleware');
 const defaultImage = 'http://localhost:3000/uploads/avatars/avatar-default-2.png'
 
 //Register
-router.post('/register', (req, res, next) => {
+router.route('/')
+.post((req, res, next) => {
     let newUser = new User({
         name: req.body.name,
         email: req.body.email,
@@ -32,6 +33,36 @@ router.post('/register', (req, res, next) => {
             });
         }
     })
+})
+//profiles
+.get((req, res, next) => {
+      User.find({},"name email username imageUrl",function(err, docs) {
+          if (!err) {
+              res.send(docs);
+              return docs;
+          } else { console.log(err); }
+      });
+})
+.delete(function(req, res){
+    User.findOneAndRemove({_id: req.params.id}, function(err) {
+        if (!err) {
+            res.json({
+                success: true,
+                msg: "se elimino correctamente"
+            })
+        }
+    })
+});
+
+
+//profile
+router.get('/:id', (req, res, next) => {
+      User.findById(req.params.id, function(err, user) {
+          if (!err) {
+              res.send(user);
+              return user;
+          } else { console.log(err); }
+      });
 });
 
 //Authenticate
@@ -74,75 +105,4 @@ router.post('/authenticate', (req, res, next) => {
         });
     });
 });
-
-
-//profiles
-router.route('/profile')
-.get((req, res, next) => {
-      User.find({},"name email username imageUrl",function(err, docs) {
-          if (!err) {
-              res.send(docs);
-              return docs;
-          } else { console.log(err); }
-      });
-})
-.delete(function(req, res){
-    User.findOneAndRemove({_id: req.params.id}, function(err) {
-        if (!err) {
-            res.json({
-                success: true,
-                msg: "se elimino correctamente"
-            })
-        }
-    })
-});
-
-
-//profile
-router.get('/profile/:id', (req, res, next) => {
-      User.findById(req.params.id, function(err, user) {
-          if (!err) {
-              res.send(user);
-              return user;
-          } else { console.log(err); }
-      });
-});
-
-
-//Avatar
-/*
-router.route('/avatar')
-    .post(upload.single('avatar'),function(req, res){
-        var imagen = new Imagen({
-            title: req.body.title,
-            creator: req.body.creator,
-            file: req.body.file
-        });
-        imagen.save(function(err){
-            if (!err) {
-                res.json({
-                    success: true,
-                    msg: "se creo el nuevo avatar"
-                })
-                //res.redirect('/avatar/'+imagen._id)
-            } else {
-                res.send(err);
-            }
-        })
-    });
-
-router.route('/avatar/:id')
-    .get(function(req, res, next) {
-        imagenMiddleware.findImage(req, res, next);
-    });
-
-router.route('/avatar')
-    .get(function(req, res) {
-        Imagen.find({}, function(err, imagen) {
-            res.send(imagen);
-            return imagen;
-        })
-    });
-
-
-*/module.exports = router;
+module.exports = router;

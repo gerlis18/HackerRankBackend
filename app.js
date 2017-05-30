@@ -49,8 +49,8 @@ app.use(passport.session());
 
 //express-session Middleware
 app.use(session({
-    secret: 'MaratonIG', 
-    resave: false, 
+    secret: 'MaratonIG',
+    resave: false,
     saveUninitialized: false
 }));
 
@@ -66,11 +66,31 @@ app.use('/challenge', challenges);
 app.use('/userTests', challengesDetails);
 
 app.get('/', (req, res) => {
-    res.status(200).send('invalid endpoint');
+    //res.sendFile(__dirname + '/public/client/index.html');
 });
 
-io.on('connection', function(socket) {
-    console.log(socket);
+io.on('connection', function (socket) {
+    var addedUser = false;
+
+    socket.on('disconnect', function () {
+        console.log('user disconected');
+    });
+
+    socket.on('add-message', (message) => {
+        io.emit('message', {
+            type: 'new-message',
+            text: message
+        });
+        console.log(`${socket.username}: ${message}`);
+    });
+
+    socket.on('add-user', (username) => {
+        if (addedUser) return;
+        socket.username = username;
+        addedUser = true;
+        socket.broadcast.emit('user', socket.username);
+        console.log('user connected: ' + username);
+    });
 });
 
 server.listen(port, () => {

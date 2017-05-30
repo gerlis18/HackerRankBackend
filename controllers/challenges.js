@@ -2,7 +2,8 @@ const router = require('express').Router();
 const challengeMiddleware = require('../middlewares/challengeMiddleware');
 const challengeModel = require('../models/challenge');
 
-router.route('/register').post((req, res) => {
+router.route('/')
+.post((req, res) => {
     newTest = new challengeModel({
         title: req.body.title,
         exampleHtml: req.body.exampleHtml,
@@ -28,10 +29,8 @@ router.route('/register').post((req, res) => {
             console.log(err);
         }
     });
-});
-
-
-router.route('/').get(function (req, res) {
+})
+.get(function (req, res) {
     challengeMiddleware.getTests((err, test) => {
         if (!err) {
             res.json({
