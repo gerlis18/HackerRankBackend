@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 //test Schema
 
-const testSchema = mongoose.Schema({
+const challengeSchema = mongoose.Schema({
     title: { type: String, required: true },
     exampleHtml: { type: String, required: true },
     language: [{
@@ -12,5 +12,5 @@ const testSchema = mongoose.Schema({
     dificulty: { type: String, required: true }
 });
 
-module.exports = mongoose.model('Test', testSchema);
+module.exports = mongoose.model('Tests', challengeSchema);
 

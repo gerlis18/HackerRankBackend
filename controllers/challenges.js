@@ -38,6 +38,7 @@ router.route('/')
                 status: res.statusCode,
                 tests: test
             });
+            //res.send(test);
         } else {
             res.status(400).json({
                 success: false,
@@ -94,7 +95,7 @@ router.route('/:id')
                 });
                 console.log(err);
             }
-        })
+        });
     })
     .delete(function (req, res) {
         challengeMiddleware.deleteTest(req.params.id, (err) => {

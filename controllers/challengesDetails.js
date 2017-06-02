@@ -6,11 +6,10 @@ router.route('/')
 .post((req, res) => {
     const newUserTest = new challengesDetail({
         user: req.body.user,
-        language: req.body.language,
         dateTime: new Date().toJSON(),
-        test: req.body.test,
-        testOK: req.body.testOK,
-        testNoOK: req.body.testNoOK,
+        challenge: req.body.challenge,
+        challengeOK: req.body.challengeOK,
+        challengeNoOK: req.body.challengeNoOK,
         state: req.body.state,
         score: req.body.score
     });
@@ -38,13 +37,7 @@ router.route('/')
 
 router.route('/:id')
 .get((req, res) => {
-    challengesDetailMiddleware.getUserTestById(req.params.id, (err, data) => {
-        if (!err) {
-            res.send(data);
-        } else {
-            res.send(err);
-        }
-    })
+    challengesDetailMiddleware.getUserTestById(req.params.id, req, res);
 });
 
 module.exports = router;

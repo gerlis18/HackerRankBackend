@@ -1,7 +1,7 @@
 const challengeModel = require('../models/challenge');
 
 module.exports.addTest = (newTest, callback) => {
-    newTest.save(callback)
+    newTest.save(callback);
 }
 
 module.exports.getTests = (callback) => {

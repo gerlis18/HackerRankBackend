@@ -11,12 +11,13 @@ module.exports.getUserTests = (callback) => {
 module.exports.getUserTestById = (id, req, res) => {
     challengesDetail.findById(id)
     .populate('user')
+    .populate('challenge')
     .exec(function(err, userTest) {
         if (!err) {
             res.status(200).json({
                 success: true,
                 status: res.statusCode,
-                userTest: userTest
+                challengeDetail: userTest
             })
         } else {
             res.status(400).json({
