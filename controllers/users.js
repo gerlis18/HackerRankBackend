@@ -1,15 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const userMiddleware = require('../middlewares/userMiddleware');
-const config = require('../config/database');
-const Imagen = require('../models/images');
-const imagenMiddleware = require('../middlewares/imageMiddleware');
 const defaultImage = 'http://localhost:3000/uploads/avatars/avatar-default-2.png'
-const acl = require('../config/acl');
 const auth = require('../middlewares/auth');
-const moment = require('moment');
+
 
 //Register
 router.route('/')
@@ -19,7 +14,8 @@ router.route('/')
             email: req.body.email,
             username: req.body.username,
             password: req.body.password,
-            imageUrl: defaultImage
+            imageUrl: defaultImage,
+            isAdmin: req.body.isAdmin
         });
         userMiddleware.addUser(newUser, (err, user) => {
             if (err) {
@@ -33,24 +29,19 @@ router.route('/')
                     success: true,
                     msg: "Usuario registrado"
                 });
-                acl.addUserRoles(Object.toString(newUser._id), 'user', (err) => {
-                    if (err) {
-                        console.log('Oo´ps: ' + err);
-                    }
-                })
             }
         })
     })
     //profiles
     .get((req, res, next) => {
-        User.find({}, "name email username imageUrl", function (err, users) {
+        User.find({}, "name email username imageUrl isAdmin", function (err, users) {
             if (!err) {
                 return res.status(200).json({
                     status: true,
                     statusCode: res.statusCode,
                     users,
                 });
-            } 
+            }
 
             console.log(err);
         });
@@ -59,28 +50,21 @@ router.route('/')
 
 //profile
 router.route('/:id')
-    .get(auth.isAuth, auth.isAdmin,(req, res, next) => {
+    .get(auth.isAdmin, (req, res, next) => {
         User.findById(req.params.id, function (err, user) {
-            if (!err) {
-                acl.userRoles(Object.toString(user._id), (err, roles) => {
-                    if (!err) {
-                        res.json({
-                            user: user,
-                            roles: roles
-                        });
-                    } else {
-                        console.log(err);
-                    }
-
-                })
-                return user;
-            } else {
-                res.status(400).json({
+            if (err) {
+                return res.json({
                     status: false,
-                    code: res.statusCode,
-                    msg: 'Ocurrio un error al traer el usuario'
-                })
+                    statusCode: res.statusCode,
+                    msg: `ocurrio un error al buscar por id ${err}`
+                });
             }
+
+            res.status(200).json({
+                status: true,
+                code: res.statusCode,
+                user: user
+            })
         });
     })
     .put((req, res, next) => {
@@ -128,44 +112,4 @@ router.route('/:id')
             }
         });
     });
-
-//Authenticate
-router.post('/authenticate', (req, res, next) => {
-    const username = req.body.username;
-    const password = req.body.password;
-
-    userMiddleware.getUserByUsername(username, (err, user) => {
-        if (err) throw err;
-        if (!user) {
-            return res.json({
-                success: false,
-                msg: 'Usuario no encontrado'
-            });
-        }
-
-        userMiddleware.comparePassword(password, user.password, (err, isMatch) => {
-            if (err) throw err;
-            if (isMatch) {
-                const token = jwt.sign(user, config.secret, {
-                    expiresIn: moment().add(1, 'days').unix()
-                });
-                res.json({
-                    success: true,
-                    token: 'JWT ' + token,
-                    user: {
-                        id: user._id,
-                        name: user.name,
-                        username: user.username,
-                        email: user.email
-                    }
-                });
-            } else {
-                return res.json({
-                    success: false,
-                    msg: 'Contraseña incorrecta'
-                });
-            }
-        });
-    });
-});
 module.exports = router;

@@ -17,7 +17,7 @@ module.exports.isAuth = function (req, res, next) {
 }
 
 module.exports.isAdmin = function(req, res, next) {
-    if (req.headers.role !== 'admin') {
+    if (!req.headers.admin) {
         return res.status(403).send({
             status: false,
             statusCode: res.statusCode,

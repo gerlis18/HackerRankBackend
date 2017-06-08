@@ -4,15 +4,13 @@ const challengeModel = require('../models/challenge');
 
 router.route('/')
 .post((req, res) => {
-    newTest = new challengeModel({
+    let newTest = new challengeModel({
         title: req.body.title,
         exampleHtml: req.body.exampleHtml,
-        language: [
-            {name: req.body.language[0].name, sourceCodeUrl: req.body.language[0].sourceCode},
-            {name: req.body.language[1].name, sourceCodeUrl: req.body.language[1].sourceCode}],
+        language: req.body.language,
         dificulty: req.body.dificulty
     });
-
+    console.log(newTest);
     challengeMiddleware.addTest(newTest, (err, test) => {
         if (!err) {
             res.json({
