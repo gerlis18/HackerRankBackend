@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
-const userMiddleware = require('../middlewares/userMiddleware');
+const userMiddleware = require('../middlewares/user-middleware');
 const defaultImage = 'http://localhost:3000/uploads/avatars/avatar-default-2.png'
-const auth = require('../middlewares/auth');
+const auth = require('../middlewares/auth-middleware');
 
 
 //Register
@@ -34,7 +34,7 @@ router.route('/')
     })
     //profiles
     .get((req, res, next) => {
-        User.find({}, "name email username imageUrl isAdmin", function (err, users) {
+        User.find({}, "name email username imageUrl", function (err, users) {
             if (!err) {
                 return res.status(200).json({
                     status: true,
@@ -50,7 +50,7 @@ router.route('/')
 
 //profile
 router.route('/:id')
-    .get(auth.isAdmin, (req, res, next) => {
+    .get((req, res, next) => {
         User.findById(req.params.id, function (err, user) {
             if (err) {
                 return res.json({

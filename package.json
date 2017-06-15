@@ -24,6 +24,7 @@
     "moment": "^2.18.1",
     "mongoose": "*",
     "multer": "^1.3.0",
+    "nodemon": "^1.11.0",
     "passport": "*",
     "passport-jwt": "*",
     "socket.io": "^2.0.1"

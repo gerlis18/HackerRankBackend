@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const challengesDetail = require('../models/challengesDetail');
-const challengesDetailMiddleware = require('../middlewares/challengesDetailMiddleware');
+const challengesDetail = require('../models/challenge-detail');
+const challengesDetailMiddleware = require('../middlewares/challenges-detail-middleware');
 
 router.route('/')
 .post((req, res) => {

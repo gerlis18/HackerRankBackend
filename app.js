@@ -9,9 +9,6 @@ const mongoDB = require('./config/database');
 const session = require('express-session');
 const app = express();
 const server = require('http').createServer(app);
-//const socketIO = require('./helpers/socket');
-const MongoStore = require('connect-mongo')(session);
-const auth = require('./middlewares/auth');
 
 
 mongoose.connect(mongoDB.database);
@@ -25,7 +22,6 @@ mongoose.connection.on('error', (err) => {
 });
 
 app.use(session({
-    //store: new MongoStore({ mongooseConnection: mongoose.connection }),
     secret: 'MaratonIG',
     resave: false,
     saveUninitialized: true
@@ -38,9 +34,9 @@ const authController = require('./controllers/auth');
 
 const challenges = require('./controllers/challenges');
 
-const challengesDetails = require('./controllers/challengesDetails');
+const challengesDetails = require('./controllers/challenges-details');
 
-const fileUpload = require('./controllers/fileUpload');
+const fileUpload = require('./controllers/file-upload');
 
 //port
 const port = process.env.PORT || 3000;
@@ -63,20 +59,20 @@ app.use(passport.session());
 require('./config/passport')(passport);
 
 //routes
-app.use('/users', users);
+let baseUrl = '/api';
 
-app.use('/auth', authController);
+app.use(baseUrl + '/users', users);
 
-app.use('/challenge',challenges);
+app.use(baseUrl + '/auth', authController);
 
-app.use('/challengeDetails', auth.isAuth, challengesDetails);
+app.use(baseUrl + '/challenge',challenges);
 
-app.use('/upload', fileUpload);
+app.use(baseUrl + '/challengeDetails',challengesDetails);
 
-app.get('/', (req, res) => {
+app.use(baseUrl + '/upload', fileUpload);
+
+app.get(baseUrl + '/', (req, res) => {
     res.send('hola mudno');
-    console.log();
-    //res.sendFile(__dirname + '/public/client/index.html');
 });
 
 //server

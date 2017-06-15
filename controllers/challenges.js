@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const challengeMiddleware = require('../middlewares/challengeMiddleware');
+const challengeMiddleware = require('../middlewares/challenge-middleware');
 const challengeModel = require('../models/challenge');
 
 router.route('/')

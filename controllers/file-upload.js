@@ -2,34 +2,32 @@ const router = require('express').Router();
 const formidable = require('formidable');
 const path = require('path');
 const fs = require('fs');
-const auth = require('../middlewares/auth');
+const auth = require('../middlewares/auth-middleware');
 const mkdirp = require('mkdirp');
 
 router.route('/image')
     .post((req, res, next) => {
 
+        var userid;
+        
         var form = new formidable.IncomingForm();
 
         form.keepExtensions = true;
 
         form.multiples = true;
+        
+        form.uploadDir = path.join(__dirname, '../uploads/avatars/');
 
-        form.uploadDir = path.join(__dirname, '../public/uploads/avatars/');
-
-        /*form.on('field', function (name, value) {
+        form.on('field', function (name, value) {
             console.log('name: '+name+'value: '+value);
-            if (name == "field") {
-                form.uploadDir = path.join(__dirname, '../public/uploads/avatars/');
-                mkdirp(form.uploadDir, function (err) {
-                    if (err) console.error(err)
-                    else console.log('pow!')
-                });
+            if (name == "_id") {
+                userid = value;
             }
-        })*/
+        })
 
         form.on('file', function (name, file) {
             console.log('file: ' + name);
-            fs.rename(file.path, path.join(form.uploadDir, file.name));
+            fs.rename(file.path, path.join(form.uploadDir, `${userid}.${file.type.split('/')[1]}`));
             console.log(file.toJSON());
         });
 

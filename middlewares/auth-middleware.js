@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const config = require('../config/database');
+const bcrypt = require('bcryptjs');
 
 module.exports.isAuth = function (req, res, next) {
     if (!req.headers.authorization) {
@@ -25,4 +26,11 @@ module.exports.isAdmin = function(req, res, next) {
         });
     }
     next();
+}
+
+module.exports.comparePassword = function(candidatePassword, hash, callback){
+    bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
+        if(err) throw err;
+        callback(null, isMatch);
+    });
 }

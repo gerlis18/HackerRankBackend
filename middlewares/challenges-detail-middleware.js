@@ -1,4 +1,4 @@
-const challengesDetail = require('../models/challengesDetail');
+const challengesDetail = require('../models/challenge-detail');
 
 module.exports.add = (newUserTest, callback) => {
     newUserTest.save(callback);

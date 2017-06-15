@@ -3,7 +3,8 @@ const router = express.Router();
 const moment = require('moment');
 const config = require('../config/database');
 const jwt = require('jsonwebtoken');
-const userMiddleware = require('../middlewares/userMiddleware');
+const authMiddleware = require('../middlewares/auth-middleware');
+const userMiddleware = require('../middlewares/user-middleware');
 
 
 router.post('/authenticate', (req, res, next) => {
@@ -19,7 +20,7 @@ router.post('/authenticate', (req, res, next) => {
             });
         }
 
-        userMiddleware.comparePassword(password, user.password, (err, isMatch) => {
+        authMiddleware.comparePassword(password, user.password, (err, isMatch) => {
             if (err) throw err;
             if (isMatch) {
                 const token = jwt.sign(user, config.secret, {
