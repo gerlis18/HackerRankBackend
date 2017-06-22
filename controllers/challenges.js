@@ -8,7 +8,7 @@ router.route('/')
         title: req.body.title,
         exampleHtml: req.body.exampleHtml,
         language: req.body.language,
-        dificulty: req.body.dificulty
+        difficulty: req.body.difficulty
     });
     console.log(newTest);
     challengeMiddleware.addTest(newTest, (err, test) => {
@@ -16,13 +16,15 @@ router.route('/')
             res.json({
                 success: true,
                 statusCode: res.statusCode,
-                msg: 'Se ha creado un nuevo Test'
+                msg: 'Se ha creado un nuevo Test',
+                newTest: test
             });
         } else {
             res.status(400).json({
                 success: false,
                 statusCode: res.statusCode,
-                msg: 'hubo un error al crear el Test'
+                msg: 'hubo un error al crear el Test',
+                err: err
             });
             console.log(err);
         }
@@ -36,7 +38,6 @@ router.route('/')
                 status: res.statusCode,
                 tests: test
             });
-            //res.send(test);
         } else {
             res.status(400).json({
                 success: false,
@@ -45,7 +46,7 @@ router.route('/')
             });
             console.log(err);
         }
-    })
+    });
 });
 
 router.route('/:id')
@@ -62,10 +63,10 @@ router.route('/:id')
                     success: false,
                     msg: 'hubo un error al consultar el test por su id',
                     statusCode: res.statusCode
-                })
+                });
                 console.log(err);
             }
-        })
+        });
 
     })
     .put(function (req, res) {
@@ -83,7 +84,7 @@ router.route('/:id')
                     success: true,
                     statusCode: res.statusCode,
                     msg: 'Se ha actualizado el Test',
-                    newTest: updateTest
+                    newTest: newTest
                 });
             } else {
                 res.status(400).json({
@@ -111,7 +112,7 @@ router.route('/:id')
                 });
                 console.log(err);
             }
-        })
+        });
     });
 
 

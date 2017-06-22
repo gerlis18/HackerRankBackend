@@ -6,7 +6,8 @@ router.route('/')
 .post((req, res) => {
     const newUserTest = new challengesDetail({
         user: req.body.user,
-        dateTime: new Date().toJSON(),
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
         challenge: req.body.challenge,
         challengeOK: req.body.challengeOK,
         challengeNoOK: req.body.challengeNoOK,

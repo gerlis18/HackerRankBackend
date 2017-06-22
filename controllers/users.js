@@ -71,7 +71,6 @@ router.route('/:id')
         let updateUser = {
             email: req.body.email,
             username: req.body.username,
-            password: req.body.password,
             imageUrl: req.body.imageUrl
         };
 
@@ -89,7 +88,7 @@ router.route('/:id')
                     statusCode: res.statusCode,
                     msg: 'Hubo un error al actualizar su informacion'
                 });
-                console.log(err);
+                next(err);
             }
         });
     })

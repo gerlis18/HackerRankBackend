@@ -9,7 +9,7 @@ const challengeSchema = mongoose.Schema({
         name: {type: String, required: true},
         sourceCodeUrl: {type: String, required: true}
     }],
-    dificulty: { type: String, required: true }
+    difficulty: { type: String, required: true }
 });
 
 module.exports = mongoose.model('Tests', challengeSchema);

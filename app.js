@@ -10,7 +10,6 @@ const session = require('express-session');
 const app = express();
 const server = require('http').createServer(app);
 
-
 mongoose.connect(mongoDB.database);
 
 mongoose.connection.on('connected', () => {
@@ -65,7 +64,7 @@ app.use(baseUrl + '/users', users);
 
 app.use(baseUrl + '/auth', authController);
 
-app.use(baseUrl + '/challenge',challenges);
+app.use(baseUrl + '/challenge', challenges);
 
 app.use(baseUrl + '/challengeDetails',challengesDetails);
 
