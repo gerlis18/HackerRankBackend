@@ -3,7 +3,6 @@ const router = express.Router();
 const User = require('../models/user');
 const userMiddleware = require('../middlewares/user-middleware');
 const defaultImage = 'http://localhost:3000/uploads/avatars/avatar-default-2.png'
-const auth = require('../middlewares/auth-middleware');
 
 
 //Register
@@ -17,20 +16,21 @@ router.route('/')
             imageUrl: defaultImage,
             isAdmin: req.body.isAdmin
         });
-        userMiddleware.addUser(newUser, (err, user) => {
+        userMiddleware.addUser(newUser, (err) => {
             if (err) {
                 res.json({
                     success: false,
                     msg: "Error al registrar usuario",
                     error: err
                 });
+                next(err);
             } else {
                 res.json({
                     success: true,
                     msg: "Usuario registrado"
                 });
             }
-        })
+        });
     })
     //profiles
     .get((req, res, next) => {
@@ -43,17 +43,17 @@ router.route('/')
                 });
             }
 
-            console.log(err);
+            next(err);
         });
     });
 
 
 //profile
 router.route('/:id')
-    .get((req, res, next) => {
+    .get((req, res) => {
         User.findById(req.params.id, function (err, user) {
             if (err) {
-                return res.json({
+                return res.status(400).json({
                     status: false,
                     statusCode: res.statusCode,
                     msg: `ocurrio un error al buscar por id ${err}`
@@ -64,13 +64,14 @@ router.route('/:id')
                 status: true,
                 code: res.statusCode,
                 user: user
-            })
+            });
         });
     })
     .put((req, res, next) => {
         let updateUser = {
             email: req.body.email,
             username: req.body.username,
+            password: req.body.password,
             imageUrl: req.body.imageUrl
         };
 
@@ -111,4 +112,21 @@ router.route('/:id')
             }
         });
     });
+
+router.route('/updateImage/:id')
+    .put((req, res, next) => {
+        var imageUrl = req.body.imageUrl;
+
+        userMiddleware.updateImage(req.params.id, imageUrl, (err) => {
+            if (err) {
+                return next(err);
+            }
+            res.status(200).json({
+                status: true,
+                statusCode: res.statusCode,
+                msg: "¡Imagen actualizada!"
+            });
+        });
+    });
+
 module.exports = router;

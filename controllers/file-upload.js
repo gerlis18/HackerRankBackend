@@ -86,7 +86,7 @@ router.route('/file')
         form.parse(req);
     });
 
-router.route('/execfile')
+router.route('/runTest')
     .post((req, res) => {
         var form = new formidable.IncomingForm();
         var language = '';
