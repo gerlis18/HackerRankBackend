@@ -41,4 +41,10 @@ router.route('/:id')
     challengesDetailMiddleware.getUserTestById(req.params.id, req, res);
 });
 
+
+router.route('/:id/:challenge')
+.get((req, res) => {
+    challengesDetailMiddleware.getUserScore(req.params.id, req.params.challenge, req, res);
+});
+
 module.exports = router;
