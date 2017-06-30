@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const moment = require('moment');
 const config = require('../config/database');
 const bcrypt = require('bcryptjs');
 
@@ -11,14 +10,13 @@ module.exports.isAuth = function (req, res, next) {
     }
 
     const token = req.headers.authorization;
-    //console.log('authorization: '+ req.headers.authorization);
     const payload = jwt.decode(token, config.secret);
-    req.user = payload.sub
+    req.user = payload.sub;
     next();
-}
+};
 
 module.exports.isAdmin = function(req, res, next) {
-    if (!req.headers.admin) {
+    if (req.headers.isAdmin === 'false' || req.headers.isAdmin === undefined) {
         return res.status(403).send({
             status: false,
             statusCode: res.statusCode,
@@ -26,11 +24,11 @@ module.exports.isAdmin = function(req, res, next) {
         });
     }
     next();
-}
+};
 
 module.exports.comparePassword = function(candidatePassword, hash, callback){
     bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
         if(err) throw err;
         callback(null, isMatch);
     });
-}
+};

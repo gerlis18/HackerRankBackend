@@ -65,7 +65,7 @@ app.use(baseUrl + '/auth', authController);
 
 app.use(baseUrl + '/challenge', challenges);
 
-app.use(baseUrl + '/challengeDetails',challengesDetails);
+app.use(baseUrl + '/challengeDetails', challengesDetails);
 
 app.use(baseUrl + '/upload', fileUpload);
 

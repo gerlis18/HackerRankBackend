@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
 const userMiddleware = require('../middlewares/user-middleware');
-const defaultImage = 'http://localhost:3000/uploads/avatars/avatar-default-2.png'
-
+const authMiddleware = require('../middlewares/auth-middleware');
 
 //Register
 router.route('/')
@@ -13,7 +12,7 @@ router.route('/')
             email: req.body.email,
             username: req.body.username,
             password: req.body.password,
-            imageUrl: defaultImage,
+            imageUrl: "",
             isAdmin: req.body.isAdmin
         });
         userMiddleware.addUser(newUser, (err) => {
@@ -33,7 +32,7 @@ router.route('/')
         });
     })
     //profiles
-    .get((req, res, next) => {
+    .get(authMiddleware.isAdmin,  (req, res, next) => {
         User.find({}, "name email username imageUrl", function (err, users) {
             if (!err) {
                 return res.status(200).json({
@@ -72,7 +71,8 @@ router.route('/:id')
             email: req.body.email,
             username: req.body.username,
             password: req.body.password,
-            imageUrl: req.body.imageUrl
+            imageUrl: req.body.imageUrl,
+            isAdmin: req.body.isAdmin
         };
 
         userMiddleware.updateUser(req.params.id, updateUser, (err, newUser) => {
@@ -93,7 +93,7 @@ router.route('/:id')
             }
         });
     })
-    .delete((req, res, next) => {
+    .delete(authMiddleware.isAdmin, (req, res, next) => {
         userMiddleware.deleteUser(req.params.id, (err) => {
             if (!err) {
                 res.json({
