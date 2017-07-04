@@ -36,6 +36,8 @@
     "author": "galvarez@intergrupo.com",
     "license": "ISC",
     "devDependencies": {
-        "mssql": "^4.0.4"
+        "eslint": "^3.19.0",
+        "eslint-config-airbnb-base": "^11.2.0",
+        "eslint-plugin-import": "^2.2.0"
     }
 }

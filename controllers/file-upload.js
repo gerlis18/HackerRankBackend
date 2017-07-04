@@ -86,7 +86,7 @@ router.route('/file')
         form.parse(req);
     });
 
-router.route('/execfile')
+router.route('/runTests')
     .post((req, res) => {
         var form = new formidable.IncomingForm();
         var language = '';
@@ -125,7 +125,7 @@ router.route('/execfile')
         form.on('file', function (name, file) {
             form.uploadDir = path.join(__dirname, `../uploads/solutions/${username}/${language}/${fileUploadMiddleware.getLocalDateTime()}`);
             fileUploadMiddleware.createFolder(form.uploadDir);
-            console.log('file: ' + name);
+            console.log('file: ' + file.name.replace(titleChallenge, titleChallenge+'Test'));
             fs.rename(file.path, path.join(form.uploadDir, file.name));
             processedFile = file;
         });

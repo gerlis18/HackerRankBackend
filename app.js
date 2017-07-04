@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const multipart = require('connect-multiparty');
 const cors = require('cors');
 const passport = require('passport');
 const mongoose = require('mongoose');
@@ -30,6 +29,8 @@ app.use(session({
 const users = require('./controllers/users');
 
 const authController = require('./controllers/auth');
+
+const authSettingsMiddleware = require('./middlewares/auth-settings');
 
 const challenges = require('./controllers/challenges');
 
@@ -62,11 +63,13 @@ let baseUrl = '/api';
 
 app.use(baseUrl + '/users', users);
 
+app.use(baseUrl + '/auth', authSettingsMiddleware);
+
 app.use(baseUrl + '/auth', authController);
 
 app.use(baseUrl + '/challenge', challenges);
 
-app.use(baseUrl + '/challengeDetails',challengesDetails);
+app.use(baseUrl + '/challengeDetails', challengesDetails);
 
 app.use(baseUrl + '/upload', fileUpload);
 

@@ -19,8 +19,10 @@ function getResultsUnitTestsCsharp(dir, username, res) {
         var score = calculateScore(results);
         res.status(200).json({
             statusCode: res.statusCode,
+            passed: results.passed,
+            failed: results.failed,
             completed: score
-        })
+        });
     });
 }
 
