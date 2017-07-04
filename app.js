@@ -30,6 +30,8 @@ const users = require('./controllers/users');
 
 const authController = require('./controllers/auth');
 
+const authSettingsMiddleware = require('./middlewares/auth-settings');
+
 const challenges = require('./controllers/challenges');
 
 const challengesDetails = require('./controllers/challenges-details');
@@ -60,6 +62,8 @@ require('./config/passport')(passport);
 let baseUrl = '/api';
 
 app.use(baseUrl + '/users', users);
+
+app.use(baseUrl + '/auth', authSettingsMiddleware);
 
 app.use(baseUrl + '/auth', authController);
 

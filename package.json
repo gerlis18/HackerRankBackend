@@ -30,5 +30,10 @@
     "xmldom": "^0.1.27"
   },
   "author": "galvarez@intergrupo.com",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.2.0"
+  }
 }

@@ -4,47 +4,20 @@ const User = require('../models/user');
 const userMiddleware = require('../middlewares/user-middleware');
 const authMiddleware = require('../middlewares/auth-middleware');
 
-//Register
-router.route('/')
-    .post((req, res, next) => {
-        let newUser = new User({
-            name: req.body.name,
-            email: req.body.email,
-            username: req.body.username,
-            password: req.body.password,
-            imageUrl: "",
-            isAdmin: req.body.isAdmin
-        });
-        userMiddleware.addUser(newUser, (err) => {
-            if (err) {
-                res.json({
-                    success: false,
-                    msg: "Error al registrar usuario",
-                    error: err
-                });
-                next(err);
-            } else {
-                res.json({
-                    success: true,
-                    msg: "Usuario registrado"
-                });
-            }
-        });
-    })
-    //profiles
-    .get(authMiddleware.isAdmin,  (req, res, next) => {
-        User.find({}, "name email username imageUrl", function (err, users) {
-            if (!err) {
-                return res.status(200).json({
-                    status: true,
-                    statusCode: res.statusCode,
-                    users,
-                });
-            }
+// Gey All Users
+router.get(authMiddleware.isAdmin,  (req, res, next) => {
+	User.find({}, "name surname email username jobTitle imageUrl", function (err, users) {
+		if (!err) {
+				return res.status(200).json({
+					status: true,
+					statusCode: res.statusCode,
+					users,
+				});
+		}
 
-            next(err);
-        });
-    });
+		next(err);
+	});
+});
 
 
 //profile
@@ -108,7 +81,6 @@ router.route('/:id')
                     statusCode: res.statusCode,
                     msg: 'Hubo un error al eliminar el Usuario'
                 });
-                console.log(err);
             }
         });
     });
