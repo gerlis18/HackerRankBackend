@@ -4,36 +4,10 @@ const User = require('../models/user');
 const userMiddleware = require('../middlewares/user-middleware');
 const authMiddleware = require('../middlewares/auth-middleware');
 
-//Register
 router.route('/')
-    .post((req, res, next) => {
-        let newUser = new User({
-            name: req.body.name,
-            email: req.body.email,
-            username: req.body.username,
-            password: req.body.password,
-            imageUrl: "",
-            isAdmin: req.body.isAdmin
-        });
-        userMiddleware.addUser(newUser, (err) => {
-            if (err) {
-                res.json({
-                    success: false,
-                    msg: "Error al registrar usuario",
-                    error: err
-                });
-                next(err);
-            } else {
-                res.json({
-                    success: true,
-                    msg: "Usuario registrado"
-                });
-            }
-        });
-    })
-    //profiles
+    // Get All Profiles
     .get((req, res, next) => {
-        User.find({}, "name email username imageUrl", function (err, users) {
+        User.find({}, "name surname email username imageUrl", function (err, users) {
             if (!err) {
                 return res.status(200).json({
                     status: true,
@@ -47,10 +21,10 @@ router.route('/')
 });
 
 
-//profile
-router.route('/:id')
+// Get profile by username
+router.route('/:username')
     .get((req, res) => {
-        User.findById(req.params.id, function (err, user) {
+        userMiddleware.getUserByUsername(req.params.username, (err, user) => {
             if (err) {
                 return res.status(400).json({
                     status: false,
@@ -59,7 +33,15 @@ router.route('/:id')
                 });
             }
 
-            res.status(200).json({
+            if(!user){
+                return res.status(404).json({
+                    status: false,
+                    statusCode: res.statusCode,
+                    msg: `El usuario con el nombre de usuario ${req.params.username} no existe.`
+                })
+            }
+
+            res.json({
                 status: true,
                 code: res.statusCode,
                 user: user

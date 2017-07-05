@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 
 router.post('/', (req, res) => {
     const user = res.locals.user;
-    
+
     if(!user){
         return res.status(404).json({ error: 'No existe el usuario' });
     }
@@ -24,6 +24,7 @@ router.post('/', (req, res) => {
             surname: user.surname,
             username: user.username,
             email: user.email,
+            imageUrl: user.imageUrl,
             jobTitle: user.jobTitle,
             isAdmin: user.isAdmin
         }
