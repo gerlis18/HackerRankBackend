@@ -9,7 +9,7 @@ const session = require('express-session');
 const app = express();
 const server = require('http').createServer(app);
 
-mongoose.connect(mongoDB.database);
+mongoose.connect(mongoDB.database, { useMongoClient: true });
 
 mongoose.connection.on('connected', () => {
     console.log(`Connected to database: ${mongoDB.database}`);
@@ -37,6 +37,9 @@ const challenges = require('./controllers/challenges');
 const challengesDetails = require('./controllers/challenges-details');
 
 const fileUpload = require('./controllers/file-upload');
+
+const globalScore = require('./controllers/global-score');
+
 
 //port
 const port = process.env.PORT || 3000;
@@ -72,6 +75,8 @@ app.use(baseUrl + '/challenge', challenges);
 app.use(baseUrl + '/challengeDetails', challengesDetails);
 
 app.use(baseUrl + '/upload', fileUpload);
+
+app.use(baseUrl + '/globalScore', globalScore);
 
 app.get(baseUrl + '/', (req, res) => {
     res.send('hola mudno');
