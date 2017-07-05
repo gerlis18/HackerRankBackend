@@ -32,7 +32,7 @@ router.route('/')
         });
     })
     //profiles
-    .get(authMiddleware.isAdmin,  (req, res, next) => {
+    .get((req, res, next) => {
         User.find({}, "name email username imageUrl", function (err, users) {
             if (!err) {
                 return res.status(200).json({
