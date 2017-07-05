@@ -74,8 +74,8 @@ router.route('/:id')
         let updateTest = {
             title: req.body.title,
             exampleHtml: req.body.exampleHtml,
-            sourceCodeUrl: req.body.sourceCode,
-            dificulty: req.body.dificulty
+            language: req.body.language,
+            difficulty: req.body.difficulty
         };
 
         challengeMiddleware.updateTest(req.params.id, updateTest, (err, newTest) => {
