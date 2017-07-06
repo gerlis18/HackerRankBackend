@@ -16,6 +16,13 @@ module.exports.getGlobalsScores = (callback) => {
         .exec(callback);
 };
 
+module.exports.getGlobalScoreByUser = (userid, callback) => {
+    globalScore.find({ 'user':  userid})
+    .sort({ score: -1 })
+    .limit(1)
+    .exec(callback);
+};
+
 module.exports.delelte = (id, callback) => {
     globalScore.findByIdAndRemove(id, callback);
 };

@@ -49,7 +49,7 @@ module.exports.getUserScore = (userid, challenge, req, res) => {
                     });
                 } else {
                     res.status(400).json({
-                        success: true,
+                        success: false,
                         status: res.statusCode,
                         msg: 'No se encontro informacion final de usuario: ' + userid + ' - prueba: ' + challenge
                     });
