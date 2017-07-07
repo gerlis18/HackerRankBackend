@@ -3,6 +3,7 @@ const formidable = require('formidable');
 const path = require('path');
 const fs = require('fs');
 const fileUploadMiddleware = require('../middlewares/file-upload-middleware');
+const utils = require('../helpers/utils');
 
 router.route('/image')
     .post((req, res) => {
@@ -20,7 +21,7 @@ router.route('/image')
         form.on('field', function (name, value) {
 
             if (!fs.existsSync(form.uploadDir)) {
-                fileUploadMiddleware.createFolder(form.uploadDir);
+                utils.createFolder(form.uploadDir);
             }
             console.log('name: ' + name + 'value: ' + value);
             if (name === "_id") {
@@ -60,12 +61,12 @@ router.route('/file')
 
         form.on('field', function (name, value) {
             if (!fs.existsSync(form.uploadDir)) {
-                fileUploadMiddleware.createFolder(form.uploadDir);
+                utils.createFolder(form.uploadDir);
             }
             console.log('name: ' + name + 'value: ' + value);
             if (name === 'titulo') {
                 form.uploadDir = path.join(__dirname, '../uploads/files/' + value);
-                fileUploadMiddleware.createFolder(form.uploadDir);
+                utils.createFolder(form.uploadDir);
             }
         })
 
@@ -102,18 +103,18 @@ router.route('/runTests')
         form.on('field', function (key, value) {
 
             if (!fs.existsSync(form.uploadDir)) {
-                fileUploadMiddleware.createFolder(form.uploadDir);
+                utils.createFolder(form.uploadDir);
             }
             console.log('name: ' + key + 'value: ' + value);
             if (key === 'username') {
                 form.uploadDir = path.join(__dirname, '../uploads/solutions/' + value);
-                fileUploadMiddleware.createFolder(form.uploadDir);
+                utils.createFolder(form.uploadDir);
                 username = value;
             }
 
             if (value === 'Java' || value === 'C#') {
                 form.uploadDir = path.join(__dirname, `../uploads/solutions/${username}/${value}`);
-                fileUploadMiddleware.createFolder(form.uploadDir);
+                utils.createFolder(form.uploadDir);
                 language = value;
             }
 
@@ -123,9 +124,8 @@ router.route('/runTests')
         });
 
         form.on('file', function (name, file) {
-            form.uploadDir = path.join(__dirname, `../uploads/solutions/${username}/${language}/${fileUploadMiddleware.getLocalDateTime()}`);
-            fileUploadMiddleware.createFolder(form.uploadDir);
-            console.log('file: ' + file.name.replace(titleChallenge, titleChallenge+'Test'));
+            form.uploadDir = path.join(__dirname, `../uploads/solutions/${username}/${language}/${utils.getLocalDateTime()}`);
+            utils.createFolder(form.uploadDir);
             fs.rename(file.path, path.join(form.uploadDir, file.name));
             processedFile = file;
         });
